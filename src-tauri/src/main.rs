@@ -9,6 +9,9 @@ mod core;
 #[cfg(feature = "cli")]
 mod cli;
 
+#[cfg(feature = "gui")]
+mod gui;
+
 fn main() -> anyhow::Result<()> {
     // Mode detection: CLI if arguments present, GUI otherwise
     #[cfg(feature = "cli")]
@@ -47,9 +50,31 @@ fn main() -> anyhow::Result<()> {
 
 #[cfg(feature = "gui")]
 fn run_gui() -> anyhow::Result<()> {
-    // Tauri application setup
-    // TODO: Implement Tauri GUI when gui feature is enabled
-    println!("GUI mode not yet implemented");
-    println!("Please use CLI mode: video_toolset --video <FILE> --config <FILE>");
+    tauri::Builder::default()
+        .setup(|app| {
+            let app_handle = app.handle().clone();
+
+            // Initialize state
+            let gui_state = gui::init_gui_state();
+            app.manage(gui_state);
+
+            Ok(())
+        })
+        .invoke_handler(tauri::generate_handler![
+            gui::load_config,
+            gui::save_config,
+            gui::get_config,
+            gui::update_roi,
+            gui::get_roi,
+            gui::update_threshold,
+            gui::update_min_scene_len,
+            gui::update_blur_size,
+            gui::detect_scenes,
+            gui::get_scenes,
+            gui::get_video_metadata
+        ])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
+
     Ok(())
 }
