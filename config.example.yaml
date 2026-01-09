@@ -1,0 +1,26 @@
+# Scene Detection Profile
+# Copy and customize this file for different detection scenarios
+
+profile_name: "default"
+
+# Detection threshold (0.0 - 255.0)
+# Higher = less sensitive, Lower = more sensitive
+# Recommended: 20-50 for most videos
+threshold: 30.0
+
+# Region of Interest (ROI) - area to analyze for scene changes
+# Use absolute pixel coordinates
+roi:
+  x: 0        # X offset from left edge
+  y: 0        # Y offset from top edge
+  width: 1920 # Width of analysis region
+  height: 1080 # Height of analysis region
+
+# Minimum scene length in frames
+# Prevents detecting rapid flashes as scene changes
+# At 30fps: 15 frames = 0.5 seconds
+min_scene_len: 15
+
+# Gaussian blur kernel size (must be odd number)
+# Higher = more noise reduction, less sensitivity
+blur_size: 5
